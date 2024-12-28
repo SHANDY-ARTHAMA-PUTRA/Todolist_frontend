@@ -1,44 +1,73 @@
-import { Tabs } from 'expo-router';
-import React from 'react';
-import { Platform } from 'react-native';
+// app/(tabs)/_layout.tsx
 
-import { HapticTab } from '@/components/HapticTab';
-import { IconSymbol } from '@/components/ui/IconSymbol';
-import TabBarBackground from '@/components/ui/TabBarBackground';
-import { Colors } from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/useColorScheme';
+import React, { useContext } from "react";
+import { Tabs } from "expo-router";
+import FontAwesome from '@expo/vector-icons/FontAwesome';
+import { TitleContext } from "../_layout";
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
+
+  const { setTitle } = useContext(TitleContext);
 
   return (
     <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        headerShown: false,
-        tabBarButton: HapticTab,
-        tabBarBackground: TabBarBackground,
-        tabBarStyle: Platform.select({
-          ios: {
-            // Use a transparent background on iOS to show the blur effect
-            position: 'absolute',
-          },
-          default: {},
-        }),
-      }}>
-      <Tabs.Screen
-        name="index"
+      screenOptions={({ route }) => ({
+        tabBarActiveTintColor: '#fff',
+        tabBarInactiveTintColor: '000',
+        
+        headerStyle: {
+          backgroundColor: '#858be5',
+        },
+        headerShadowVisible: false,
+        headerTintColor: '#fff',
+        tabBarStyle: {
+          backgroundColor: '#858be5',
+        },
+        headerTitle: route.name, // Title for the header
+      })}
+      screenListeners={{
+        state: (e) => {
+          const currentRouteName = e.data.state?.routes[e.data.state.index]?.name;
+          if (currentRouteName === "index") {
+            setTitle("Home"); // Update title in context
+          }
+          else
+          setTitle(currentRouteName); // Update title in context
+        },
+      }}
+    >
+      <Tabs.Screen 
+        name="index" 
         options={{
-          title: 'Home',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
+          title: 'Home', 
+          headerTitle: 'Home',
+          headerShown: false,
+          tabBarIcon: ({ color }) => (
+            <FontAwesome name="home" size={18} color={color} />
+          ),
         }}
       />
-      <Tabs.Screen
-        name="explore"
+      <Tabs.Screen 
+        name="Suggestions" 
         options={{
-          title: 'Explore',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
-        }}
+          title: 'Suggestions',
+          headerTitle: 'Suggestions',
+          headerShown: false,
+          tabBarIcon: ({ color }) => (
+            <FontAwesome name="lightbulb-o" size={18} color={color} />
+          ),
+        }} 
+      />
+      <Tabs.Screen 
+        name="Users" 
+        options={{
+          title: 'Users',
+          headerTitle: 'Users',
+          headerShown: false,
+          tabBarIcon: ({ color }) => (
+            <FontAwesome name="users" size={18} color={color} />
+          ),
+        }} 
       />
     </Tabs>
   );

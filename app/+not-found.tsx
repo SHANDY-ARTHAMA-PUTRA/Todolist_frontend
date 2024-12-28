@@ -1,19 +1,26 @@
-import { Link, Stack } from 'expo-router';
-import { StyleSheet } from 'react-native';
+// app/+not-found.tsx
 
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+import React, { useContext } from 'react';
+import { Link, Stack } from 'expo-router';
+import { StyleSheet, View, Text } from 'react-native';
+import { ThemeContext } from "./_layout";
 
 export default function NotFoundScreen() {
+
+  const { darkMode } = useContext(ThemeContext);
+
   return (
     <>
+      {/* Mengatur judul layar "Oops!" */}
       <Stack.Screen options={{ title: 'Oops!' }} />
-      <ThemedView style={styles.container}>
-        <ThemedText type="title">This screen doesn't exist.</ThemedText>
+      
+      {/* Tampilan layar dengan teks dan link kembali ke beranda */}
+      <View style={[styles.container, { backgroundColor: darkMode ? "#121212" : "#fff" }, ]}>
+        <Text style={[styles.title, { color: darkMode ? "#fff" : "#000" }, ]}>This screen doesn't exist.</Text>
         <Link href="/" style={styles.link}>
-          <ThemedText type="link">Go to home screen!</ThemedText>
+          <Text style={[styles.linkText, { color: darkMode ? "#fff" : "#000" }, ]}>Go to home screen!</Text>
         </Link>
-      </ThemedView>
+      </View>
     </>
   );
 }
@@ -25,8 +32,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     padding: 20,
   },
+  title: {
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
   link: {
     marginTop: 15,
     paddingVertical: 15,
+  },
+  linkText: {
+    color: '#1e90ff',
+    fontWeight: '500',
   },
 });
